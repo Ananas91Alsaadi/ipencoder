@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Sign Up Form</title>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script> 
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries --> 
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-analytics.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-firestore.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        #form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .form-box {
+            width: 300px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        .form-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #008000; /* Cool green color */
+        }
+        .form-box input[type="text"],
+        .form-box input[type="password"],
+        .form-box input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button{
+            width: 100%;
+            background-color: #008000; /* Cool green color */
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+
+        }
+        .form-box input[type="submit"] {
+            background-color: #008000; /* Cool green color */
+            color: #fff;
+            cursor: pointer;
+        }
+        .form-box input[type="submit"]:hover {
+            background-color: #005400; /* Darker green on hover */
+        }
+        .switch-form {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .switch-form a {
+            text-decoration: none;
+            color: #008000; /* Cool green color */
+        }
+
+
+        .form-box2 {
+            margin-top: 20%;
+            width: 70vw;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        .form-box2 h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #008000; /* Cool green color */
+        }
+        .form-box2 input[type="text"],
+        .form-box2 input[type="password"],
+        .form-box2 textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-box2 textarea {
+            height: 150px; /* Set desired height */
+            resize: vertical; /* Allow vertical resizing */
+        }
+        .form-box2 input[type="submit"] {
+            width: 100%;
+            background-color: #008000; /* Cool green color */
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .form-box2 input[type="submit"]:hover {
+            background-color: #005400; /* Darker green on hover */
+        }
+#signed {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+p{
+    text-wrap: wrap;
+    overflow: scroll;
+}
+    </style>
+</head>
+<body>
+    <div id="form-container">
+        <div class="form-box" id="login-box">
+            <h2>Login</h2>
+            <form id="login-form">
+                <label for="login-username">Username:</label>
+                <input type="text" id="login-username" name="login-username" required>
+
+                <label for="login-password">Password:</label>
+                <input type="password" id="login-password" name="login-password" required>
+
+                <input type="submit" value="Login">
+            </form>
+            <div class="switch-form">Don't have an account? <a href="#" onclick="toggleForm()">Sign Up</a></div>
+        </div>
+        <div class="form-box" id="signup-box" style="display:none;">
+            <h2>Sign Up</h2>
+            <form id="signup-form">
+                <label for="signup-username">Username:</label>
+                <input type="text" id="signup-username" name="signup-username" required>
+
+                <label for="signup-password">Password:</label>
+                <input type="password" id="signup-password" name="signup-password" required>
+
+                <input type="submit" value="Sign Up">
+            </form>
+            <div class="switch-form">Already have an account? <a href="#" onclick="toggleForm()">Login</a></div>
+        </div>
+    </div>
+
+
+<div id="signed">
+        <div class="form-box2">
+            <h2>Encoding</h2>
+
+            <div id="saving-form">
+                <input type="text" placeholder="Origin" name="Origin" id="Origin" required>
+                <input type="text" placeholder="Secret" name="Secret" id="Secret" required>
+                <button onclick="savingForm()">Save</button>
+            </div>
+<br><br>
+
+            <div id="encoding-form">
+                <textarea placeholder="Enter code or paragraph here" id="codesd"></textarea>
+                <button onclick="encodeForm()">Encode</button>
+            </div>
+            <p id="encoded"></p>
+
+            <div id="dencoding-form">
+                <textarea placeholder="Enter code or paragraph here" id="codes"></textarea>
+                <button onclick="dencodeForm()">Dencode</button>
+            </div>
+            <p id="dencoded"></p>
+
+        </div>
+    </div>
+
+
+
+    <script src="app.js">
+
+    </script>
+</body>
+</html>
